@@ -1,7 +1,7 @@
 node{
     stage('git checjout')
     {
-        git branch: 'master', url: 'https://github.com/kondetimounika80/project-health-care.git'
+        git branch: 'master', url: 'https://github.com/Arshiyaz/health_care.git'
     }
 
     stage('build'){
@@ -10,21 +10,21 @@ node{
     }
     stage('dockerimagebuild')
     {
-    sh 'sudo docker build -t kondetimounika/healthcare:1.0 .'
+    sh 'sudo docker build -t arshiya13/healthcare .'
    
     }
     stage('docker image push to registry')
     {
     
-    withCredentials([string(credentialsId: 'docker-password', variable: 'docker')]) {
-        sh 'docker login -u kondetimounika -p ${docker}'
-        sh 'docker push kondetimounika/healthcare:1.0'
+    withCredentials([string(credentialsId: 'dockerid', variable: 'dockervar')]) {
+        sh 'docker login -u arshiya13 -p ${dockervar}'
+        sh 'docker push arshiya13/healthcare'
     
 }
     }
     stage('deploy')
     {
     
-       ansiblePlaybook become: true, credentialsId: 'ansiblekey', disableHostKeyChecking: true, installation: 'myAnsible', inventory: '/etc/ansible/hosts', playbook: 'ansible-playbook.yml' 
+       ansiblePlaybook become: true, credentialsId: 'ansibleid', disableHostKeyChecking: true, installation: 'ansible', inventory: '/etc/ansible/hosts', playbook: 'ansible-playbook.yml' 
     }
 }
