@@ -1,19 +1,19 @@
 node{
-    stage('git checjout')
+    stage('code_checkout')
     {
         git branch: 'master', url: 'https://github.com/Arshiyaz/health_care.git'
     }
 
-    stage('build'){
+    stage('code_build'){
     
     sh 'mvn clean package'
     }
-    stage('dockerimagebuild')
+    stage('docker_image_build')
     {
     sh 'sudo docker build -t arshiya13/healthcare .'
    
     }
-    stage('docker image push to registry')
+    stage('docker image push')
     {
     
     withCredentials([string(credentialsId: 'dockerid', variable: 'dockervar')]) {
@@ -22,7 +22,7 @@ node{
     
 }
     }
-    stage('deploy')
+    stage('ansible_deploy')
     {
     
        ansiblePlaybook become: true, credentialsId: 'ansibleid', disableHostKeyChecking: true, installation: 'ansible', inventory: '/etc/ansible/hosts', playbook: 'ansible-playbook.yml' 
